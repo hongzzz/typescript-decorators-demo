@@ -1,7 +1,13 @@
-function log(originalMethod: Function, context: ClassMethodDecoratorContext) {
+function log<This extends Object, Args extends any[], Return>(
+  originalMethod: (this: This, ...args: Args) => Return,
+  context: ClassMethodDecoratorContext<
+    This,
+    (this: This, ...args: Args) => Return
+  >,
+) {
   // console.log("log", context);
   const methodName = String(context.name);
-  function replacementMethod(this: any, ...args: any[]) {
+  function replacementMethod(this: This, ...args: Args): Return {
     const className = String(this.constructor.name);
     console.log(`LOG: Entering method '${className}.${methodName}'.`);
     const result = originalMethod.call(this, ...args);
